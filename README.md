@@ -400,7 +400,7 @@ I admit I added the comment to make the pyramid a little taller, yet you got the
         // results is now equal to ['one', 'two']
     });
 
-Note that in all above examples, I've avoided loops, and also avoided parallelism in the calls to the building blocks, as those add yet more complexity. *Async.JS* and the alternatives, can help significantly also with the loops and parallelism.
+Note that in all above examples, I've avoided loops, and also avoided parallelism in the calls to the building blocks, as those add yet more complexity. *Async.js* and the alternatives, can help significantly also with the loops and parallelism.
 
 Suggested Methodology
 ---------------------
