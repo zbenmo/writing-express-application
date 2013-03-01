@@ -253,7 +253,7 @@ Code and functionality (middleware) can be shared beteen routes, by *using* it, 
         });
     }
 
-Small hint. If you wander what gets run first, the middleware, or the routes, and if the order is important, then yes, the order is important, and you can also search for Express documentation about **app.route**.
+Small hint. If you wonder what gets run first, the middleware, or the routes, and if the order is important, then yes, the order is important, and you can also search for Express documentation about **app.route**.
 This, is also relevant for the error handling.
 
 You may feel by now the potential but also the pain. There are a lot of opportunities to reuse code and share between projects, and yet it can be confusing.
