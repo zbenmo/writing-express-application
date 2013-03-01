@@ -59,7 +59,7 @@ The two routes above "share" the behavior of parsing the body of the request and
 
 There is an assumption that both *express.bodyParser* & *express.cookieParser* will each attach their processed output to *req*, and call *next()*.
 
-If indeed the above assumption holds, then we wind up, for example, in */users*. *loadUsersList* not shown here loads the list, attach it to *req* and then calls *next()*.
+If indeed the above assumption holds, then we wind up, for example, in */users*. *loadUsersList* not shown here loads the list, attaches it to *req* and then calls *next()*.
 
 And we render an HTML page with the Jade template engine in this example.
 
