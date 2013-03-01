@@ -225,6 +225,7 @@ Or maybe we need two functions to be called one after the other:
 Code and functionality (middleware) can be shared beteen routes, by *using* it, or explicitly when only some of the routes need it, or from within other middleware.
 
     app.use(loadUser);
+    
     app.get('/', renderTop);
     app.get('/users/:id', renderProfile);
     
@@ -255,8 +256,74 @@ Code and functionality (middleware) can be shared beteen routes, by *using* it, 
 
 Small hint.
 
-If you wander what gets run first, the middleware, or the routes, and if the order is important, than yes, the order is important, and you can also search for documentation about *app.route*.
+If you wander what gets run first, the middleware, or the routes, and if the order is important, then yes, the order is important, and you can also search for Express documentation about *app.route*.
 This, is also relevant for the error handling.
 
 You may feel by now the potential but also the pain. There are a lot of opportunities to reuse code and share between projects, and yet it can be confusing.
 
+### Should all our functions from now and forever have the middleware signature, *function(req, res, next)* ?
+
+I feel a little wrong about misusing *req* for everything, and about passing callbacks even for clearly local synchronous functionality.
+There are also questions of how the testing should look like.
+If nothing better, then we can use asserts.
+
+    function underTest (req, res, next) {
+        assert(req.task);
+        
+        ...
+        next();
+    }
+    
+    --
+
+    ...
+    it('should perform the task', function(done) {
+        
+        var req = {task : {add:{l: 1, r: 2}}};
+        var res = null;
+        
+        underTest(req, res, function(err) {
+            assert(!err);
+            assert(req.result === 3);
+            done();
+        }
+        
+    });
+
+Also, if we want to leave the *app.js* as light as possible, and put the logic in the "routes" themselves, it is less clear how to arrange the common logic.
+
+    app.js
+    ------
+    
+    app.get('/', routes.top);
+    app.get('/users', users.list);
+    
+    routes.js
+    ---------
+    
+    export.top = function(req, res, next) {
+        /// request already parsed?
+        /// have we already loaded a user?
+        /// Am I alowed to reply from here, and avoid calling next() ?
+        ...
+        assert(req.params);
+        assert(!req.user);
+        ...
+    }
+    
+    users.js
+    --------
+    
+    export.list = function(req, res, next) {
+        /// request already parsed?
+        /// have we already loaded a user list?
+        /// Am I alowed to reply from here, and avoid calling next() ?
+        ...
+        assert(!req.params);
+        assert(req.usersList);
+        ...
+    }
+
+
+    
+    
