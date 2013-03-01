@@ -117,7 +117,7 @@ A good practice, in order to avoid calling *next()/next(err)* more than once by 
         /// Make sure you understand why the call to next() is placed where it is and not here.
     }
 
-And what if we forget to call *next()*? Like my driving teacher told me, you must make progress. Nothing will happen, the next function in the line will not be called and the end user will not get the web page.
+And what if we forget to call *next()*? Like my driving teacher told me, you must make progress. Nothing will happen, the next function down the line will not be called and the end user will not get the web page.
 If you're lucky enough you've used the connection timeout middleware that warns you about it.
 
     app.use(connectTimeout({
