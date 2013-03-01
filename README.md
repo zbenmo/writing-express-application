@@ -265,8 +265,13 @@ You may feel by now the potential but also the pain. There are a lot of opportun
 
 I feel a little wrong about misusing *req* for everything, and about passing callbacks even for clearly local synchronous functionality.
 There are also questions of how the testing should look like.
-If nothing better, then we can use asserts.
+If nothing better, then we can use asserts and documenation.
 
+    /***
+    * expects req.task
+    * If successful will set req.result
+    * Will not reply to end user (will call next()/next(err))
+    **/
     function underTest (req, res, next) {
         assert(req.task);
         
@@ -301,6 +306,9 @@ Also, if we want to leave the *app.js* as light as possible, and put the logic i
     routes.js
     ---------
     
+    /***
+    * Ahm, will render if everything okay, but if an error occured will call next(err)
+    */
     export.top = function(req, res, next) {
         /// request already parsed?
         /// have we already loaded a user?
@@ -314,6 +322,9 @@ Also, if we want to leave the *app.js* as light as possible, and put the logic i
     users.js
     --------
     
+    /***
+    * Will not reply to end user (will call next()/next(err))
+    */
     export.list = function(req, res, next) {
         /// request already parsed?
         /// have we already loaded a user list?
@@ -323,6 +334,9 @@ Also, if we want to leave the *app.js* as light as possible, and put the logic i
         assert(req.usersList);
         ...
     }
+
+Suggested Methodology
+---------------------
 
 
     
