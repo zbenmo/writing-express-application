@@ -125,3 +125,44 @@ If you're lucky enough you've used the connection timeout middleware that warns 
         time : 10000
     }));
 
+### Modules
+
+To break a monelitic *app.js* file into manageble project, we can use the following structure (I justed used the scafold express generated application for this example).
+
+    .
+    ├── app.js
+    ├── package.json
+    ├── public
+    │   ├── images
+    │   ├── javascripts
+    │   └── stylesheets
+    │       └── style.css
+    ├── routes
+    │   ├── index.js
+    │   └── user.js
+    └── views
+        ├── index.jade
+        └── layout.jade
+
+Where, for example, *user.js* is:
+
+    /*
+     * GET users listing.
+     */
+
+    exports.list = function(req, res){
+      res.send("respond with a resource");
+    };
+
+And *app.js* is:
+
+    var express = require('express')
+      , routes = require('./routes')
+      , user = require('./routes/user')
+    
+    ...
+    
+    app.get('/users', user.list);
+    
+    ...
+
