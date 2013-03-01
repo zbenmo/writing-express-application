@@ -195,3 +195,68 @@ Or if we want to add some logic:
         }
     }
 
+Or maybe we need two functions to be called one after the other:
+
+    function ensureUserLoaded(req, res, next) {
+        if (req.user) {
+            return next();
+        }
+        loadUser(req, req, function(err) {
+            if (err) {
+                return next(err);
+            }
+            if (!req.user) {
+                req.user = new User();
+            }
+            next();
+        }
+    }
+
+    function makeUserSmile(req, res, next) {
+        assert(req.user);
+        req.user.smile = true;
+        next();
+    }
+
+    app.get('/', ensureUserLoaded, makeUserSmile, function(req, res) {
+        res.render('users/smiling.jade', { req: req });    
+    });
+
+Code and functionality (middleware) can be shared beteen routes, by *using* it, or explicitly when only some of the routes need it, or from within other middleware.
+
+    app.use(loadUser);
+    app.get('/', renderTop);
+    app.get('/users/:id', renderProfile);
+    
+    Or
+    
+    app.get('/', loadUser, renderTop);
+    app.get('/users/:id', loadUser, renderProfile);
+    app.get('/users', loadList, renderList); /// here we don't need loadUser
+    
+    Or
+    
+    app.get('/', top);
+    app.get('/users:id', profile);
+    
+    function top (req, res, next) {
+        loadUser(req, res, function(err) {
+            if (err) return next(err);
+            res.render('/top', {req: req}); /// and I'll not call next()
+        });
+    }
+    
+    function profile  (req, res, next) {
+        loadUser(req, res, function(err) {
+            if (err) return next(err);
+            res.render('/profile', {req: req}); /// and I'll not call next()
+        });
+    }
+
+Small hint.
+
+If you wander what gets run first, the middleware, or the routes, and if the order is important, than yes, the order is important, and you can also search for documentation about *app.route*.
+This, is also relevant for the error handling.
+
+You may feel by now the potential but also the pain. There are a lot of opportunities to reuse code and share between projects, and yet it can be confusing.
+
