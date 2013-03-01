@@ -4,7 +4,7 @@ Writing Express Application
 Introduction
 ------------
 
-### Many Bothans died to bring us this information. (I'm following Alex Young [Daily JS](http://dailyjs.com/) who used this phrase in a blog, and I find it funny).
+### Many Bothans died to bring us this information. (I'm following Alex Young who used this phrase in his blog [Daily JS](http://dailyjs.com/), and I find it funny).
 
 The "hello world" application with Node/Express is trivial.
 Here it is (stolen from [howtonode](http://howtonode.org/getting-started-with-express)):
