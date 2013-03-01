@@ -405,6 +405,117 @@ Note that in all above examples, I've avoided loops, and also avoided parallelis
 Suggested Methodology
 ---------------------
 
+What if we agree to reply to the end user only from *app.js* ?
 
+    app.js
+    ------
     
+    ...
+    app.get('/', routes.top, function(req, res) {
+        res.render('/top', {req: req} );
+    });
+    app.get('/users/:id', routes.profile, function(req, res) {
+        res.render('/profile', {req: req} );
+    });
+
+What if we agree that what is not clearly used as a middleware, will not get the *res* parameter:
+
+    routes.js
+    ---------
     
+    ...
+    function loadUser (req, next) {
+        assert(req.user_id);
+        User.findById(req.user_id,function(err,user) {
+            if (err) return next(err);
+            if (!user) return next('not found');
+            req.user = user;
+            delete req.user_id; /// to make sure nowhere in the code we use it directly
+            next();
+        }
+    }
+    
+    exports.top = function (req, res, next) { /// res is here just as we use this as a middleware
+        loadUser(req, function(err) {
+            if (err) return next(err);
+            loadHobby(req, next);
+        }
+    }
+
+So, theoreticly, if we not really sure we're exporting middleware, we can have it like this:
+
+    app.js
+    ------
+    
+    ...
+    app.get('/', function(req, res, next) {routes.top(req, next);}, function(req, res) {
+        res.render('/top', {req: req} );
+    });
+    app.get('/users/:id', function(req, res, next) {routes.profile(req, next);}, function(req, res) {
+        res.render('/profile', {req: req} );
+    });
+    
+    routes.js
+    ---------
+    
+    ...
+    exports.top = function (req, next) {
+        loadUser(req, function(err) {
+            if (err) return next(err);
+            loadHobby(req, next);
+        }
+    }
+
+Another option to consider is to use normal functions, or if more convinient, use *options* object, were relevant.
+If you go this path, you can avoid using a callback for simple synchronous functions, but when you have a asynchronous function, make yourself a favour and use the name *callback* rather than *next*.
+
+    app.js
+    ------
+    
+    ...
+    app.get('/', function(req, res, next) {routes.top(req, next);}, function(req, res) {
+        if (req.winner) { /// see below
+            res.render('/prize', {req: req} );
+        } else {
+            res.render('/top', {req: req} );
+        }
+    });
+    app.get('/users/:id', function(req, res, next) {routes.profile(req, next);}, function(req, res) {
+        res.render('/profile', {req: req} );
+    });
+    
+    routes.js
+    ---------
+    
+    ...
+    function loadUser (user_id, callback) {
+        assert(user_id);
+        User.findById(user_id,function(err,user) {
+            if (err) return callback(err);
+            if (!user) return callback('not found');
+            callback(null,user,Math.random() > 0.99);
+        }
+    }
+
+    ...
+    exports.top = function (req, next) {
+        loadUser(req.user_id, function(err, user, winner) {
+            if (err) return next(err);
+            req.user = user;
+            delete req.user_id; /// to make sure nowhere in the code we use it directly
+            if (winner) {
+                req.winner = true;
+                return next(); /// stop everything and signal the caller to reply with prize
+            }
+            var options = {top: true};
+            loadHobby(user, options, function(err,hobby) {
+                if (err) console.error(err.message); /// but othersize continue (assuming we can still reasonably serve the request)
+                if (hobby) req.hobby = hobby;
+                next();
+            });
+        }
+    }
+
+Is it any better? It is your call.
+
+Enjoy *Node.js* & *Express* !
