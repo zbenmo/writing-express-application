@@ -35,7 +35,7 @@ The signature for a route handler (or also for a middleware), is as follows:
     ..
     }
 
-*next* is not shown in the "hello world" example as it is not used and it is allowed to omit formal parameters in Javascript that come at the end (*req* was not omitted as it is followed by *res*). 
+*next* is not shown in the "hello world" example as it is not used and it is allowed to omit formal parameters in Javascript that come at the end ( *req* was not omitted as it is followed by *res* ). 
 
 Finally we listen on the default port (8000), and log to the console.
 
