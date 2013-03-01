@@ -4,7 +4,7 @@ Writing Express Application
 Introduction
 ------------
 
-### Many Bothans died to bring us this information. (I'm following Alex Young who used this phrase in his blog [Daily JS](http://dailyjs.com/), and I find it funny).
+### Many Bothans died to bring us this information. (I'm following Alex Young who used this phrase from Star Wars in his blog [Daily JS](http://dailyjs.com/), and I find it funny).
 
 The "hello world" application with Node/Express is trivial.
 Here it is (stolen from [howtonode](http://howtonode.org/getting-started-with-express)):
@@ -22,7 +22,7 @@ Here it is (stolen from [howtonode](http://howtonode.org/getting-started-with-ex
     console.log('Express server started on port %s', app.address().port);
 
 The first two lines require *express* and creates the HTTP server (application).
-Then we're using a middleware (logger in this case).
+Then we're using a middleware (function returned from the call to *express.logger()* in this case).
 And we get to the first and only route we serve */*.
 The signature for a route handler (or also for a middleware), is as follows:
 
@@ -34,6 +34,8 @@ The signature for a route handler (or also for a middleware), is as follows:
     function(req, res, next) {
     ..
     }
+
+*next* is not shown in the "hello world" example as it is not used and it is allowed to omit formal parameters in Javascript that come at the end (*req* was not omitted as it is followed by *res*). 
 
 Finally we listen on the default port (8000), and log to the console.
 
