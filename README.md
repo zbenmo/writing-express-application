@@ -99,7 +99,7 @@ What if we discover we can serve the request and nothing else is needed? Just re
 
 Don't take above example as a recommendation. I'm just showing you what people (and I) may end up doing.
 
-A good practice, in order to avoid calling *next()/next(err)* more than once is to always *return next()* when relevant.
+A good practice, in order to avoid calling *next()/next(err)* more than once by mistake, is to always *return next()* when relevant.
 
     function ensureUserLoaded(req, res, next) {
         if (req.user) {
@@ -165,4 +165,33 @@ And *app.js* is:
     app.get('/users', user.list);
     
     ...
+
+### What if we want to call one or more middleware from within another middleware?
+
+    function ensureUserLoaded(req, res, next) {
+        if (req.user) {
+            return next();
+        }
+        loadUser(req, req, next);
+    }
+
+Or if we want to add some logic:
+
+    function ensureUserLoaded(req, res, next) {
+        if (req.user) {
+            req.user.smile = true;
+            return next();
+        }
+        loadUser(req, req, function(err) {
+            if (err) {
+                return next(err);
+            }
+            if (!req.user) {
+                req.user = new User({smile: true});
+            } else {
+                req.user.smile = true;
+            }
+            next();
+        }
+    }
 
