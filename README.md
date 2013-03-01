@@ -42,8 +42,7 @@ everything should be asynchronous and none-blocking. This is where callback func
 
 The challenge is to develop a methodology for building a full fledged web application (talking to databases, serving RESTful APIs as well as web pages & XHR, etc.)
 
-Middleware Revised & Modules
-----------------------------
+### Middleware (Revised) & Modules
 
 Middleware should have the exact signature as above, and are used either in routes or in *app.use*.
 Routes can list more than one middleware. Few examples:
@@ -254,9 +253,7 @@ Code and functionality (middleware) can be shared beteen routes, by *using* it, 
         });
     }
 
-Small hint.
-
-If you wander what gets run first, the middleware, or the routes, and if the order is important, then yes, the order is important, and you can also search for Express documentation about *app.route*.
+Small hint. If you wander what gets run first, the middleware, or the routes, and if the order is important, then yes, the order is important, and you can also search for Express documentation about **app.route**.
 This, is also relevant for the error handling.
 
 You may feel by now the potential but also the pain. There are a lot of opportunities to reuse code and share between projects, and yet it can be confusing.
@@ -334,6 +331,76 @@ Also, if we want to leave the *app.js* as light as possible, and put the logic i
         assert(req.usersList);
         ...
     }
+
+### Reminder of How We Got Here (related to Egypt & Mexico)
+
+Asynchronous code with callback, will put us in a situations where we build pyramids.
+
+    func_a(1,3,function(err,res) {
+        if (err) {
+            err_handling1(err,function() {
+                return -1;
+            }
+        } else if (res) {
+            func_b(res,42,function(err1,res1) {
+                if (err1) {
+                    return -2;
+                }
+                return res1;
+            }
+        } else {
+            return -3;
+        }
+    });
+
+(and I have been gentle)
+
+Here is another example, where we use functions with the middleware signature.
+
+    function a (req, res, next) {
+        if (req.user) {
+            b(req, res, function(err) {
+                if (err && (err.code === 4)) {
+                    return a_1(req, res, next); /// we use the the original callback
+                } else if (err) {
+                    return next(err);
+                } else if (req.hobby) {
+                    return c(req, res, next); /// same here
+                }
+                return next();
+            });
+        }
+        b_1(req, res, function(err) {
+            assert(!err);
+            c_1(req, res, function(err) {
+                if (err) console.error(err.message);
+                next(err); /// err is passed wheather defined or not
+            });
+        });
+    }
+
+I admit I added the comment to make the pyramid a little taller, yet you got the point.
+
+### Async
+
+[Async.js](https://github.com/caolan/async) (or another similar utility), can be part of the solution. It enables handling asynchronized code a little more systematicly. Taken from there:
+
+    async.series([
+        function(callback){
+            // do some stuff ...
+            callback(null, 'one');
+        },
+        function(callback){
+            // do some more stuff ...
+            callback(null, 'two');
+        }
+    ],
+    // optional callback
+    function(err, results){
+        // results is now equal to ['one', 'two']
+    });
+
+Note that in all above examples, I've avoided loops, and also avoided parallelism in the calls to the building blocks, as those add yet more complexity. *Async.JS* and the alternatives, can help significantly also with the loops and parallelism.
 
 Suggested Methodology
 ---------------------
