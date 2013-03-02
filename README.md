@@ -468,7 +468,7 @@ So, theoreticly, if we not really sure we're exporting middleware, we can have i
         }
     }
 
-Another option to consider is to use normal functions, or if more convinient, use *options* object, were relevant.
+Another option to consider is to use normal functions, or if more convinient, use *options* object, where relevant.
 If you go this path, you can avoid using a callback for simple synchronous functions, but when you have a asynchronous function, make yourself a favour and use the name *callback* rather than *next*.
 
     app.js
