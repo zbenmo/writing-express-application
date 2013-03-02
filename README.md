@@ -35,7 +35,7 @@ The signature for a route handler (or also for a middleware), is as follows:
     ..
     }
 
-*next* is not shown in the "hello world" example as it is not used and it is allowed to omit formal parameters in Javascript that come at the end ( *req* was not omitted as it is followed by *res* ). 
+*next* is not shown in the "hello world" example as it is not used ( *req* was not omitted as it is followed by *res* which is used ). 
 
 Finally we listen on the default port (8000), and log to the console.
 
@@ -128,7 +128,7 @@ If you're lucky enough you've used the connection timeout middleware that warns 
 
 ### Modules
 
-To break a monelitic *app.js* file into manageble project, we can use the following structure (I justed used the scafold express generated application for this example).
+To break a monelitic *app.js* file into manageble project, we can use the following structure (I justed used the scaffold express generated application for this example).
 
     .
     ├── app.js
