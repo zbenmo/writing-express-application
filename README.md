@@ -255,7 +255,7 @@ Code and functionality (middleware) can be shared beteen routes, by *using* it, 
         });
     }
 
-Small hint. If you wonder what gets run first, the middleware, or the routes, and if the order is important, then yes, the order is important, and you can also search for Express documentation about **app.route**.
+Small hint. If you wonder what gets run first, the middleware, or the routes, and if the order is important, then yes, the order is important, and you can also search for Express documentation about **app.router**.
 This, is also relevant for the error handling.
 
 You may feel by now the potential but also the pain. There are a lot of opportunities to reuse code and share between projects, and yet it can be confusing.
@@ -521,3 +521,5 @@ If you go this path, you can avoid using a callback for simple synchronous funct
 Is it any better? It is your call.
 
 Enjoy *Node.js* & *Express* !
+
+A small update: I have found a nice blog by [Ryan Cole](http://rycole.com/2013/01/28/organizing-nodejs-express.html), and I plan to follow his source code organization.
